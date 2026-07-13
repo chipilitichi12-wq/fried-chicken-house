@@ -3,7 +3,19 @@ const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const path = require('path');
 
-const serviceAccount = require('./firebase-key.json');
+let serviceAccount;
+
+if (process.env.FIREBASE_CONFIG) {
+    // Si estamos en Render, leemos la variable de entorno
+    serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
+} else {
+    // Si estamos en tu PC, leemos el archivo local
+    serviceAccount = require('./firebase-key.json');
+}
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
