@@ -43,12 +43,12 @@ app.get('/buscar', async (req, res) => {
 
 // Ruta para eliminar cliente en Firestore
 app.get('/eliminar', async (req, res) => {
+    const id = req.query.id; // Recibe el ID enviado desde el botón
     try {
-        const dni = req.query.dni;
-        await db.collection('registros').doc(dni).delete();
+        await db.collection('registros').doc(id).delete();
         res.json({ success: true });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
     }
 });
 
@@ -81,19 +81,4 @@ app.get('/obtener-todos', async (req, res) => {
 });
 app.listen(3000, () => {
     console.log('Servidor listo en http://localhost:3000');
-});
-app.get('/eliminar', async (req, res) => {
-    const id = req.query.id;
-    console.log("ID recibido para borrar:", id); // <-- Esto es vital para depurar
-
-    if (!id || id === 'undefined') {
-        return res.status(400).json({ success: false, error: "ID no válido" });
-    }
-
-    try {
-        await db.collection('registros').doc(id).delete();
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
 });
