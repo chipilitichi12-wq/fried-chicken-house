@@ -96,16 +96,22 @@
             });
         }
         async function borrarCliente(id) {
-    if (confirm("¿Estás seguro de que deseas eliminar este registro permanentemente?")) {
+    if (confirm("¿Estás seguro de que deseas eliminar este registro?")) {
         try {
             const res = await fetch(`/eliminar?id=${id}`);
             const result = await res.json();
             
             if (result.success) {
+                // 1. Ya no usamos location.reload()
                 alert("Registro eliminado correctamente");
-                location.reload(); // Recarga la página para refrescar la lista
+                
+                // 2. Limpiamos el panel de detalle
+                document.getElementById('detalle-cliente').innerHTML = "<p>Selecciona un nombre para ver su información.</p>";
+                
+                // 3. Volvemos a cargar la lista para quitar el nombre borrado
+                cargarListaCompleta(); 
             } else {
-                alert("Error al eliminar el registro");
+                alert("Error al eliminar");
             }
         } catch (error) {
             console.error("Error:", error);
