@@ -68,6 +68,26 @@ app.post('/guardar', async (req, res) => {
     }
 });
 
+// Agrega esto en tu server.js junto a las otras rutas
+app.get('/obtener-todos', async (req, res) => {
+    try {
+        const snapshot = await db.collection('registros').get();
+        // Mapeamos para incluir el doc.id dentro del objeto
+        const lista = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        res.json(lista);
+    } catch (error) {
+        res.status(500).json({ error: "Error" });
+    }
+});
 app.listen(3000, () => {
     console.log('Servidor listo en http://localhost:3000');
+});
+app.get('/eliminar', async (req, res) => {
+    const id = req.query.id;
+    try {
+        await db.collection('registros').doc(id).delete();
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
