@@ -84,6 +84,12 @@ app.listen(3000, () => {
 });
 app.get('/eliminar', async (req, res) => {
     const id = req.query.id;
+    console.log("ID recibido para borrar:", id); // <-- Esto es vital para depurar
+
+    if (!id || id === 'undefined') {
+        return res.status(400).json({ success: false, error: "ID no válido" });
+    }
+
     try {
         await db.collection('registros').doc(id).delete();
         res.json({ success: true });
