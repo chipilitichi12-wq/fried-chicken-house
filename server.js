@@ -13,12 +13,12 @@ if (process.env.FIREBASE_CONFIG) {
     serviceAccount = require('./firebase-key.json');
 }
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-});
+// Verifica si Firebase ya está inicializado para evitar el error
+if (!admin.apps.length) {
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount)
+    });
+}
 
 const db = admin.firestore();
 const app = express();
